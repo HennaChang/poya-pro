@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- bs -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <!-- jq -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <style>
+        table,
+        thead,
+        th,
+        tbody,
+        tr,
+        td {
+            border: 1px solid;
+        }
+
+        .td {
+            position: fixed;
+        }
+
+        td:first-child,
+        th:first-child {
+            position: sticky;
+            left: 0;
+            /* 首行永遠固定於左 */
+            z-index: 1;
+            background-color: lightpink;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Login</th>
+                <th>id</th>
+                <th>node_id</th>
+                <th>url</th>
+                <th>repos_url</th>
+                <th>hooks_url</th>
+                <th>issues_url</th>
+                <th>members_url</th>
+                <th>public_members_url</th>
+                <th>avatar_url</th>
+                <th>description</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+        <tbody id="row"></tbody>
+    </table>
+
+    <script>
+        let layerGroup = null;
+        let arrLayers = [];
+        $(document).ready(function () {
+            $.ajax({
+                url: 'https://api.github.com/users/hadley/orgs',
+                type: "get",
+                dataType: "json",
+                success: function (info) {
+                    console.log(info);
+                    let tbody = document.querySelector('table > tbody');
+                    info.forEach(element => {
+                        // console.log(element)
+                        // console.log(element.login);
+                        let tr = document.createElement("tr");
+                        tr.innerHTML = `<td>${element.login}</td>
+                        <td>${element.id}</td>
+                        <td>${element.node_id}</td>
+                        <td>${element.url}</td>
+                        <td>${element.repos_url}</td>
+                        <td>${element.events_url}</td>
+                        <td>${element.hooks_url}</td>
+                        <td>${element.issues_url}</td>
+                        <td>${element.members_url}</td>
+                        <td>${element.public_members_url}</td>
+                        <td>${element.avatar_url}</td>
+                        <td><input class='checkbox' type='checkbox'></td>`;
+                        tbody.appendChild(tr);
+                    });
+                },
+                error: function (data) {
+                    console.log("請求失敗");
+                }
+            });
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).on('click', 'input.checkbox', function (event) {
+            var yes = confirm('你確定嗎？');
+            if (yes) {
+                $(this).closest('tr').remove('tr');
+            } else {
+                alert('取消');
+            }
+        })
+    </script>
+</body>
+
+</html>
